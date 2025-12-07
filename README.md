@@ -96,7 +96,7 @@ pip install -r requirements.txt
 
 ## 3. Building the Database
 
-### 3.1 Generate SQL files
+### 3.1 Generate SQL files (Done in sql folder)
 
 **IMPORTANT:** Run this first to generate all `.sql` files:
 
