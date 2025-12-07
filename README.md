@@ -37,6 +37,7 @@ This project implements a **University Research Repository (URP)** system for ma
 ├── src/
 │   ├── concurrency solution.ipynb
 │   ├── DBMS_Final_TeamA.ipynb
+│   ├── indexing.ipynb
 │   ├── testcases.ipynb
 │   └── Transactions.ipynb
 └── README.md
@@ -96,7 +97,7 @@ pip install -r requirements.txt
 
 ## 3. Building the Database
 
-### 3.1 Generate SQL files (Done in sql folder)
+### 3.1 Generate SQL files
 
 **IMPORTANT:** Run this first to generate all `.sql` files:
 
@@ -222,9 +223,38 @@ All queries display results with proper formatting and LIMIT clauses for readabi
 
 ### 4.4 Indexing and performance optimization
 
-**Note:** Indexing examples should be added to improve query performance.
+**Notebook:** `src/indexing.ipynb`
 
-Example indexes to consider:
+**Requirements:** Update the database password (`<password>`) in the notebook before running.
+
+This notebook demonstrates the performance benefits of database indexing:
+
+**Setup:**
+- Creates a test table `LargeTable` with 5,000 rows
+- Each row has: id, name, score (0-99), created_at timestamp
+
+**Performance Comparison:**
+
+**Before Indexing:**
+- Queries use full table scan
+- EXPLAIN shows table scan without index usage
+- Records execution time for baseline
+
+**After Indexing:**
+- Creates index on `score` column: `CREATE INDEX idx_score ON LargeTable(score)`
+- Queries use index for faster lookups
+- EXPLAIN shows index usage in query plan
+- Records improved execution time
+
+**Tests Performed:**
+- Query: `SELECT * FROM LargeTable WHERE score = 50`
+- Shows number of rows returned and execution time
+- Displays EXPLAIN output before and after indexing
+- Handles duplicate index creation gracefully
+
+**Key Indexes for Production:**
+
+For the main FINAL_URP database, consider adding these indexes:
 
 ```sql
 CREATE INDEX idx_keyword_keyword ON Keyword(keyword);
@@ -233,15 +263,18 @@ CREATE INDEX idx_paperkeyword_keywordid ON PaperKeyword(keyword_id);
 CREATE INDEX idx_member_email ON Member(email);
 CREATE INDEX idx_member_deptid ON Member(dept_id);
 CREATE INDEX idx_paper_deptid ON Paper(dept_id);
+CREATE INDEX idx_review_paperid ON Review(paper_id);
+CREATE INDEX idx_comment_paperid ON Comment(paper_id);
 ```
 
-Performance testing using:
+**Performance Testing:**
+Use `EXPLAIN` to analyze query execution plans:
 
 ```sql
 EXPLAIN SELECT ...
 ```
 
-Test queries before and after indexing to measure improvement.
+Compare execution times and query plans before and after adding indexes to measure improvement.
 
 ---
 
@@ -497,6 +530,7 @@ SOURCE sql/Review.sql;
 - `src/Transactions.ipynb` - Change `password="Sneha@96"`
 - `src/concurrency solution.ipynb` - Change `password="<password>"`
 - `src/testcases.ipynb` - Change `password="//PASSWORD//"`
+- `src/indexing.ipynb` - Change `password="<password>"`
 
 ### Step 5: Run functional tests
 
@@ -517,6 +551,12 @@ Open and execute the following notebooks in order:
 3. **`src/testcases.ipynb`** - Test CRUD and complex queries
    - INSERT/SELECT/UPDATE/DELETE operations
    - JOIN, SUBQUERY, and AGGREGATE queries
+
+4. **`src/indexing.ipynb`** - Demonstrate indexing performance
+   - Creates test table with 5,000 rows
+   - Compares query performance before and after indexing
+   - Shows EXPLAIN query plans
+   - Demonstrates index creation and benefits
 
 ### Step 6: Backup database
 
