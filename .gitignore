@@ -27,7 +27,6 @@ data/*.csv
 # SQL Scripts & Backups
 # (ignores all .sql files)
 # --------------------------
-sql/
 backup/
 backup/*.sql
 
